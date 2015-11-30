@@ -5,7 +5,7 @@
  * Date: 28/11/15
  * Time: 7:58 AM
  *
- * Loads all dependencies, placed in a single file for ease of use
+ * Loads all required dependencies, placed in a single file for ease of use
  *
  */
 

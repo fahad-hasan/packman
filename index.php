@@ -43,9 +43,13 @@ if (isset($_GET['clearcart']) && $_GET['clearcart'] == 'true') {
     header('location:/');
 }
 
+/*
+ * Initialize the PackMan
+ *
+ */
+$packman = new PackMan($cart);          //optional param $debug, default false
+$packages = $packman->getPackages();
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -133,11 +137,9 @@ if (isset($_GET['clearcart']) && $_GET['clearcart'] == 'true') {
                     <div class="panel-heading">Packaging <a href="/?clearcart=true" class="btn btn-danger btn-xs pull-right">Clear Cart</a></div>
                     <div class="panel-body packages-panel">
                         <div class="packages">
-                            <!-- Initiate the PackMan and display package options -->
+                            <!-- Display package options -->
                             <?php
-                            $packman = new PackMan($cart);
                             $index = 1;
-                            $packages = $packman->getPackages();
                             if (count($packages) > 0) {
                                 foreach ($packages as $package) {
                             ?>

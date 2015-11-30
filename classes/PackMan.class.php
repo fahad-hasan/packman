@@ -34,8 +34,8 @@ class PackMan {
     /*
      * Calculates and balances the packages based on their price, weight and shipping cost using the following algorithm:
      *
-     * - Step 01: We find out the minimum number of packages we need to ship the order
-     * - Step 02: We clear the package contents by taking out the items we had put inside them (same as initiating a new package)
+     * - Step 01: We find out the minimum number of packages we need to ship the ordered items
+     * - Step 02: We clear all the packages by taking out the items we had put inside them (same as initiating a new packages)
      * - Step 03: Sort the cart items by descending order of weight, heavier items first
      * - Step 04: Take the package with the lowest shipping cost per gram and put the item there
      *
