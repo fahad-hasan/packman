@@ -17,6 +17,8 @@ namespace App\Classes;
 class Cart {
 
     private $items;
+    public $weight;
+    public $price;
 
     /*
      * Constructs the cart, with items saved in the session, or an empty cart
@@ -25,8 +27,12 @@ class Cart {
     public function __construct() {
         if (isset($_SESSION['packman_cart_items'])) {
             $this->items = $_SESSION['packman_cart_items'];
+            $this->weight = $_SESSION['packman_cart_weight'];
+            $this->price = $_SESSION['packman_cart_price'];
         } else {
             $this->items = array();
+            $this->weight = 0;
+            $this->price = 0;
         }
     }
 
@@ -36,6 +42,8 @@ class Cart {
      */
     private function save() {
         $_SESSION['packman_cart_items'] = $this->items;
+        $_SESSION['packman_cart_weight'] = $this->weight;
+        $_SESSION['packman_cart_price'] = $this->price;
     }
 
     /*
@@ -48,6 +56,8 @@ class Cart {
             $item['name'] = $name;
             $item['weight'] = $weight;
             $item['price'] = $price;
+            $this->weight += $weight;
+            $this->price += $price;
             $this->items[] = $item;
             $this->save();
         } else {
@@ -61,6 +71,8 @@ class Cart {
      */
     public function clear() {
         $this->items = array();
+        $this->weight = 0;
+        $this->price = 0;
         $this->save();
     }
 
@@ -70,32 +82,6 @@ class Cart {
      */
     public function getItems() {
         return $this->items;
-    }
-
-    /*
-     * Calculates and returns the total price of all the items stored in the cart
-     * Returns: integer
-     */
-    public function getPrice() {
-        $total = 0;
-        foreach($this->items as $item) {
-            $total += $item['price'];
-        }
-
-        return $total;
-    }
-
-    /*
-     * Calculates and returns the total weight of all the items stored in the cart
-     * Returns: integer
-     */
-    public function getWeight() {
-        $total = 0;
-        foreach($this->items as $item) {
-            $total += $item['weight'];
-        }
-
-        return $total;
     }
 
     /*

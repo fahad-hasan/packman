@@ -10,7 +10,7 @@
  * Construct: Cart $cart = required, $debug (optional, default false)
  *
  * Public: $packages, getPackages(), sortPackages($a, $b), sortCart($a, $b)
- * Private: $cart, balanceWeight(), moveThePackages(), resetPackages()
+ * Private: $cart, arrangePackages(), moveThePackages(), getEmptyPackages()
  *
  */
 
@@ -43,63 +43,31 @@ class PackMan {
      */
     public function getPackages() {
 
-        //traverse all the cart items, in their original order
-        foreach($this->cart->getItems() as $item) {
-
-            if ($this->debug) echo "Putting down ".$item['name'].", ".$item['weight']."g<br/>";
-            //Creating the first package because we have none!
-            if (count($this->packages) == 0) {
-                $package = new Package();
-                $this->packages[] = $package;
-                if ($this->debug) echo "Opening the Package ...<br/>";
-            }
-
-            //Lets see what can we put in each of the boxes
-            $added = false;
-            foreach ($this->packages as $package) {
-                //check if the package has capacity to hold this item
-                if ($package->canHold($item)) {
-                    //Add the item to the package
-                    $package->add($item);
-                    $added = true;
-                    if ($this->debug) echo $item['name'].", ".$item['weight']."g fits in Package<br/>";
-                    break;  //goto the next item
-                } else {
-                    if ($this->debug) echo $item['name'].", ".$item['weight']."g doesn't fit in Package<br/>";
-                }
-            }
-
-            //This means we don't have any existing package which can hold this item
-            if (!$added) {
-                //Time to open a new BOX!
-                $package = new Package();
-                $package->add($item);
-                $this->packages[] = $package;
-                if ($this->debug) echo "Opening a new package...<br/>";
-                if ($this->debug) echo "Putting down ".$item['name'].", ".$item['weight']."g in Package<br/>";
-            }
-
-        }
-
         //calculate the min number of boxes we need
-        $total_boxes = count($this->packages);
+        $total_boxes = $this->getPackageCount();
         if ($total_boxes > 0) {
             if ($this->debug) echo "Hmmm, we need a total of ".$total_boxes." packages...<br/>";
             //clear the box contents
-            $this->resetPackages();
+            $this->getEmptyPackages($total_boxes);
             //put the items back in the packages balancing their weight as equally as possible
-            $this->balanceWeight();
+            $this->arrangePackages();
         }
 
         //this is te most efficient packaging combination, hopefully!
         return $this->packages;
     }
 
+    private function getPackageCount() {
+        $count_by_price = ceil($this->cart->price / 250);
+        $count_by_weight = ceil($this->cart->weight / 5000);
+        return max(array($count_by_price, $count_by_weight));
+    }
+
     /*
      * Redistributes the cart items to the packages for maximum efficiency and lowest possible shipping cost
      * Returns: N/A
      */
-    private function balanceWeight() {
+    private function arrangePackages() {
         if ($this->debug) echo "Balancing the items...<br/>";
         $this->cart->sort(array($this, 'sortCart'));
         foreach($this->cart->getItems() as $item) {
@@ -112,6 +80,7 @@ class PackMan {
                     break;
                 } else {
                     //lets move the packages
+                    if ($this->debug) echo "Move packages<br/>";
                     $this->moveThePackages();
                 }
             }
@@ -158,8 +127,7 @@ class PackMan {
      * Counts the number of packages, clears them (by recreating them)
      * Returns: 0, 1, -1
      */
-    private function resetPackages() {
-        $count = count($this->packages);
+    private function getEmptyPackages($count) {
         $this->packages = array();
         for($i = 0; $i < $count; $i++ ) {
             $this->packages[] = new Package();

@@ -84,8 +84,8 @@ $packages = $packman->getPackages();
             <i class="logo fa fa-cubes"></i> PackMan
             <!-- Display the summary of the cart -->
             <p class="cart pull-right">
-                <span><i class="fa fa-shopping-cart"></i> $<?php echo number_format($cart->getPrice(), 2) ?></span>
-                <span><i class="fa fa-balance-scale"></i> <?php echo $cart->getWeight() ?>g</span>
+                <span><i class="fa fa-shopping-cart"></i> $<?php echo number_format($cart->price, 2) ?></span>
+                <span><i class="fa fa-balance-scale"></i> <?php echo $cart->weight ?>g</span>
             </p>
         </h1>
     </div>
@@ -159,8 +159,9 @@ $packages = $packman->getPackages();
                                         <label class="pull-left"><i class="fa fa-balance-scale"></i> <?php echo $package->weight ?>g</label>
                                         <label class="pull-left"><i class="fa fa-cube"></i> $<?php echo number_format($package->price, 2) ?></label>
                                         <label class="pull-right"> $<?php echo number_format($package->shipping_cost, 2) ?></label>
-                                        <?php if ($packman->debug) echo "Capacity: ".$package->weight_capacity.'g<br/>' ?>
-                                        <?php if ($packman->debug) echo "$/g: ".round($package->cost_per_gram, 2).'g<br/>' ?>
+                                        <?php /*if ($packman->debug)*/ echo "Capacity: ".$package->weight_capacity.'g<br/>' ?>
+                                        <?php /*if ($packman->debug)*/ echo "$/g: ".round($package->cost_per_gram, 2).'g<br/>' ?>
+                                        <?php /*if ($packman->debug)*/ echo "C/Rw/oS: ".$package->weight_capacity_sh.'g<br/>' ?>
                                     </div>
                                 </div>
                             <?php
