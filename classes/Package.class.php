@@ -7,7 +7,7 @@
  *
  * Represent a single package
  *
- * Public: $items, $weight, $weight_capacity, $price, $price_capacity, $shipping_cost, add(array $item), canHold()
+ * Public: $items, $weight, $weight_capacity, $price, $price_capacity, $shipping_cost, add(array $item), remove(array $item), canHold()
  * Private: calculateShipping()
  *
  */
@@ -30,12 +30,52 @@ class Package {
      * Returns: N/A
      */
     public function add(array $item) {
+
+        //add the item to the array
         $this->items[] = $item;
+
+        //now calculate and set the rest of the item attributes
         $this->weight += $item['weight'];
         $this->weight_capacity -= $item['weight'];
         $this->weight_capacity_sh = $this->calculateWeightCapacityWithoutIncreasingShipping();
         $this->price += $item['price'];
         $this->price_capacity -= $item['price'];
+        $this->shipping_cost = $this->calculateShipping();
+        $this->cost_per_gram = $this->shipping_cost/$this->weight;
+    }
+
+    /*
+     * Removes an item from the package, recalculates the package attributes
+     * Returns: N/A
+     */
+    public function remove(array $item) {
+        $items = array();
+        $index_match = null;
+
+        //find the matching item index
+        for($i = 0; $i < count($this->items); $i++) {
+            $_item = $this->items[$i];
+            if ($_item['name'] == $item['name']) {
+                $index_match = $i;
+                break;
+            }
+        }
+
+        //repopulate the items array except the item to be removed.
+        //this approach also recalculates the index which array_slice doesn't
+        for($i = 0; $i < count($this->items); $i++) {
+            if ($i != $index_match) {
+                $items[] = $this->items[$i];
+            }
+        }
+
+        //now calculate and set the rest of the item attributes
+        $this->items = $items;
+        $this->weight -= $item['weight'];
+        $this->weight_capacity += $item['weight'];
+        $this->weight_capacity_sh = $this->calculateWeightCapacityWithoutIncreasingShipping();
+        $this->price -= $item['price'];
+        $this->price_capacity += $item['price'];
         $this->shipping_cost = $this->calculateShipping();
         $this->cost_per_gram = $this->shipping_cost/$this->weight;
     }
@@ -64,6 +104,10 @@ class Package {
         }
     }
 
+    /*
+     * Calculates the weight capacity before triggering the next bracket of shipping
+     * Returns: integer
+     */
     private function calculateWeightCapacityWithoutIncreasingShipping() {
         if ($this->weight >= 0 && $this->weight <= 200) {
             return (200 - $this->weight);

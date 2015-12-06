@@ -159,9 +159,9 @@ $packages = $packman->getPackages();
                                         <label class="pull-left"><i class="fa fa-balance-scale"></i> <?php echo $package->weight ?>g</label>
                                         <label class="pull-left"><i class="fa fa-cube"></i> $<?php echo number_format($package->price, 2) ?></label>
                                         <label class="pull-right"> $<?php echo number_format($package->shipping_cost, 2) ?></label>
-                                        <?php /*if ($packman->debug)*/ echo "Capacity: ".$package->weight_capacity.'g<br/>' ?>
-                                        <?php /*if ($packman->debug)*/ echo "$/g: ".round($package->cost_per_gram, 2).'g<br/>' ?>
-                                        <?php /*if ($packman->debug)*/ echo "C/Rw/oS: ".$package->weight_capacity_sh.'g<br/>' ?>
+                                        <?php if ($packman->debug) echo "Capacity: ".$package->weight_capacity.'g<br/>' ?>
+                                        <?php if ($packman->debug) echo "$/g: ".round($package->cost_per_gram, 2).'g<br/>' ?>
+                                        <?php if ($packman->debug) echo "C/Rw/oS: ".$package->weight_capacity_sh.'g<br/>' ?>
                                     </div>
                                 </div>
                             <?php
